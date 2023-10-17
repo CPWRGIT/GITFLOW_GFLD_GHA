@@ -5,7 +5,6 @@ ispwApplication:
   runtimeConfig: iccga
   stream: GITFLOW
   application: GITFLOWD
-  assignmentPrefix: GFLD
   pathMappings:
   - path: "**/Sources/Progs"
     types:
