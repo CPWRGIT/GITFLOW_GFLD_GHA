@@ -38,6 +38,8 @@ jobs:
           runtimeConfiguration: 'ICCGA'
           stream: 'GITFLOW'
           application: 'GITFLOWD'
+          subAppl: 'GITFLOWD'
+          assignmentPrefix: 'GLFD'
           checkoutLevel: 'FEAT'
           gitUid: 'msingh9999'
           gitPass: ${{ secrets.GIT_USER1_PWD }}
