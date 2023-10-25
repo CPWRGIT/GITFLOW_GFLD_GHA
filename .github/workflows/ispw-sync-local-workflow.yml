@@ -25,7 +25,25 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-     
+      # sync step 1
+      - name: Sync with PS step
+        shell: powershell
+        run: |
+           cmd.exe /c  ${{ env.Win_Topaz_Location }}\IspwCLI.bat `
+            -operation syncGitToIspw
+            -host 'cwcc.bmc.com'
+            -port '16196'
+            -id 'PFHMKS0'
+            -pass ${{ secrets.TSO_TOKEN }}
+            -protocol None
+            -code 1047
+            -ispwServerConfig 'ICCGA'
+            -ispwServerStream 'GITFLOW'
+            -ispwServerApp 'GITFLOWD'
+            -ispwCheckoutLevel 'FEAT'
+            -assignmentPrefix: 'GFLD'
+            -gitUsername 'msingh9999'
+            -gitPassword ${{ secrets.GH_TOKEN }}      
       # sync step 2
       - name: Sync step
         uses: bmc-compuware/ispw-sync-local@1.0.0
