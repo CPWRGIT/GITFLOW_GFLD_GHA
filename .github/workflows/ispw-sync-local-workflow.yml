@@ -23,7 +23,8 @@ jobs:
           host: 'cwcc.bmc.com'
           port: 16196
           uid: 'PFHMKS0'
-          pass: ${{ secrets.TSO_TOKEN }}
+          #pass: ${{ secrets.TSO_TOKEN }}
+          pass: 'gocwcc70'
           runtimeConfiguration: 'ICCGA'
           stream: 'GITFLOW'
           application: 'GITFLOWD'
