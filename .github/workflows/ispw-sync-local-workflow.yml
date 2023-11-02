@@ -44,7 +44,7 @@ jobs:
           checkoutLevel: 'FEAT'
           gitUid: 'msingh9999'
           gitPass: ${{ secrets.GIT_USER1_PWD }}
-          token: ${{ secrets.GH_TOKEN }}
+          gitToken: ${{ secrets.GH_TOKEN }}
           winTopazPath: ${{ env.Win_Topaz_Location }}
           showEnv: false
       # Generate step
