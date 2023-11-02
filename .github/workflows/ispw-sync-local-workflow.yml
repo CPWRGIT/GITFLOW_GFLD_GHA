@@ -43,7 +43,7 @@ jobs:
           assignmentPrefix: 'GLFD'
           checkoutLevel: 'FEAT'
           gitUid: 'msingh9999'
-          gitPass: ${{ secrets.GIT_USER1_PWD }}
+          #gitPass: ${{ secrets.GIT_USER1_PWD }}
           gitToken: ${{ secrets.GH_TOKEN }}
           winTopazPath: ${{ env.Win_Topaz_Location }}
           showEnv: false
