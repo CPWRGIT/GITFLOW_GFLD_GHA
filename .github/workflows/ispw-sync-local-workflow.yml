@@ -40,4 +40,38 @@ jobs:
       
       - name: Get automatic build parameters
         run: echo "automaticBuildJson=${{ steps.sync.outputs.automaticBuildJson }}"
-     
+  release-branch-build:
+   if: (startsWith(github.ref, 'refs/heads/release/'))
+   runs-on: [self-hosted]
+   env:
+    Win_Topaz_Location: 'C:\TWB-230101\WorkbenchCLI'
+   steps:
+      - name: checkout step
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: sync step
+        uses: bmc-compuware/ispw-sync-local@ZENG-318739
+        id: sync
+        with:
+          host: 'cwcc.bmc.com'
+          port: 16196
+          uid: 'PFHMKS0'
+          #pass: ${{ secrets.TSO_TOKEN }}
+          pass: 'gocwcc70'
+          runtimeConfiguration: 'ICCGA'
+          stream: 'GITFLOW'
+          application: 'GITFLOWD'
+          subAppl: 'GITFLOWD'
+          checkoutLevel: 'RLSE'
+          gitUid: 'msingh9999'
+          #gitToken:  ${{ secrets.GH_TOKEN }}
+          gitToken: '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'
+          winTopazPath: ${{ env.Win_Topaz_Location }}
+          #containerCreation: 'per-branch'
+          showEnv: true
+          assignmentPrefix: 'GFLD'
+          #ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
+      
+      - name: Get automatic build parameters
+        run: echo "automaticBuildJson=${{ steps.sync.outputs.automaticBuildJson }}"
