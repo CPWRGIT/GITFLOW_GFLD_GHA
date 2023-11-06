@@ -4,13 +4,12 @@ name: code-pipeline-sync-local
 on: [push]
 
 jobs:
-  generate:
-    name: sync, build & deploy
-    runs-on: [self-hosted]
-    env:
+  feature-branch-build:
+   if: (startsWith(github.ref, 'refs/heads/feature/'))
+   runs-on: [self-hosted]
+   env:
       Win_Topaz_Location: 'C:\TWB-230101\WorkbenchCLI'
-    if: (startsWith(github.ref, 'refs/heads/feature/'))
-    steps:
+   steps:
       - name: checkout step
         uses: actions/checkout@v2
         with:
