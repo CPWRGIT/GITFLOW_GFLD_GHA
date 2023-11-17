@@ -61,6 +61,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
+        - run: git pull --no-rebase
       - name: sync step
         uses: bmc-compuware/ispw-sync-local@ZENG-318739
         id: sync
