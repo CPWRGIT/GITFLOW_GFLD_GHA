@@ -47,8 +47,8 @@ jobs:
           srid: 'ispw'
           runtime_configuration: 'ICCGA'
           build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
-      - name: Get the number of generate failures
-        run: echo "The number of generate failures is ${{ steps.build.outputs.generate_failed_count }}"
+      - name: Get the number of build failures
+        run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
 
   release-branch-build:
    if: (startsWith(github.ref, 'refs/heads/release/'))
@@ -92,5 +92,5 @@ jobs:
           srid: 'ispw'
           runtime_configuration: 'ICCGA'
           build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
-      - name: Get the number of generate failures
-        run: echo "The number of generate failures is ${{ steps.build.outputs.generate_failed_count }}"
+      - name: Get the number of build failures
+        run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
