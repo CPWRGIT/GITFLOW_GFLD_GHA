@@ -58,12 +58,13 @@ jobs:
    steps:
       - name: checkout step
         uses: actions/checkout@v3
-        run: |  
-            git pull --no-rebase
+        
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
-          
+      - name: Git pull 
+        run: |  
+            git pull --no-rebase   
       - name: sync step
         uses: bmc-compuware/ispw-sync-local@ZENG-318739
         id: sync
