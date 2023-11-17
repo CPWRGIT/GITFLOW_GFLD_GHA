@@ -11,10 +11,10 @@ jobs:
       Win_Topaz_Location: 'C:\TWB-230101\WorkbenchCLI'
    steps:
       - name: checkout step
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: 'feature/**'      
+          ref: ${{ github.ref }}      
       - name: sync step
         uses: bmc-compuware/ispw-sync-local@ZENG-318739
         id: sync
@@ -57,10 +57,10 @@ jobs:
     Win_Topaz_Location: 'C:\TWB-230101\WorkbenchCLI'
    steps:
       - name: checkout step
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: 'release/**'
+          ref: ${{ github.ref }}
       - name: sync step
         uses: bmc-compuware/ispw-sync-local@ZENG-318739
         id: sync
