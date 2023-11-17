@@ -71,7 +71,7 @@ jobs:
           #containerCreation: 'per-branch'
           showEnv: true
           assignmentPrefix: 'GFLD'
-          #ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
+          ispwConfigPath: 'GenApp_MainframeCore\ispwconfig-nosb.yml'
       
       - name: Get automatic build parameters
         run: echo "automaticBuildJson=${{ steps.sync.outputs.automaticBuildJson }}"
