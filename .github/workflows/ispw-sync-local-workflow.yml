@@ -103,11 +103,7 @@ jobs:
       
       - name: Promote to Pre-Prod
         run: |
-            curl --request POST \
-            --url 'http://cwcc.bmc.com:2020/ispw/ispw/assignments/MKS1000288/tasks/promote?level=DEV1' \
-            --header 'Authorization: e7b8aad6-980c-485b-a490-f6ec0b46077d' \
-            --header 'Content-Type: application/json' \
-            --data '{ "runtimeConfiguration": "iccga" }'
+            curl --request POST --url 'http://cwcc.bmc.com:2020/ispw/ispw/assignments/MKS1000288/tasks/promote?level=DEV1' --header 'Authorization: e7b8aad6-980c-485b-a490-f6ec0b46077d' --header 'Content-Type: application/json' --data '{ "runtimeConfiguration": "iccga" }'
                 
             echo "Promotion to Pre Prod successful!"
 
