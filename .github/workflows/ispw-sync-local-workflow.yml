@@ -1,7 +1,8 @@
 name: code-pipeline-sync-local
 
 
-on: [push]
+on: 
+  push:
   workflow_dispatch:
     inputs:
       environment:
