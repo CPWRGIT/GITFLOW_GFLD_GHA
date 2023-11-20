@@ -49,18 +49,6 @@ jobs:
           assignmentPrefix: 'GFLD'
           ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
       
-      - name: Build
-        uses: bmc-compuware/ispw-build@v1
-        id: build
-        with:
-          ces_url: 'http://aus-bdc-cwcc.bmc.com:2020/'
-          ces_token: ${{ secrets.CES_TOKEN }}
-          srid: 'ispw'
-          runtime_configuration: 'ICCGA'
-          build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
-      - name: Get the number of build failures
-        run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
-
       - name: Run Unit Tests
         run: echo "Ran Unit Tests successfully"  
 
