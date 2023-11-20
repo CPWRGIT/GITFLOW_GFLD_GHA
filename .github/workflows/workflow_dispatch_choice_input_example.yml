@@ -1,6 +1,7 @@
 name: Workflow Dispatch Choice Input Example
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       environment:
