@@ -106,6 +106,9 @@ jobs:
 
       - name: Run User Acceptance Tests
         run: echo "Ran User Aceptance tests successfully!" 
-
+        
+      - name: Manual Intervention
+        run: echo "selected to ${{ github.event.inputs.environment }} choice"
+        
       - name: Promote to Prod
         run: echo "Promotion to Prod successful!"
