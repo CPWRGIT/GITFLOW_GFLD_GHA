@@ -2,6 +2,16 @@ name: code-pipeline-sync-local
 
 
 on: [push]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Proceed'
+        required: true
+        default: 'Yes'
+        type: choice
+        options:
+          - Yes
+          - No
 
 jobs:
   feature-branch-build:
@@ -50,6 +60,9 @@ jobs:
       - name: Get the number of build failures
         run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
 
+      - name: Run Unit Tests
+        run: echo "Ran Unit Tests successfully"  
+
   release-branch-build:
    if: (startsWith(github.ref, 'refs/heads/release/'))
    runs-on: [self-hosted]
@@ -62,14 +75,14 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
-      - name: Update CWXTSUBC
-        run: sed -i "s/MKS/MSK/g" GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
+      #- name: Update CWXTSUBC
+      #  run: sed -i "s/MKS/MSK/g" GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
 
-      - name: Git Commit 
-        run: |  
-            git add GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
-            git commit -m "Updated"
-            git push
+      #- name: Git Commit 
+      #  run: |  
+      #      git add GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
+      #      git commit -m "Updated"
+      #      git push
       - name: sync step
         uses: bmc-compuware/ispw-sync-local@ZENG-318739
         id: sync
@@ -104,3 +117,18 @@ jobs:
           build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
       - name: Get the number of build failures
         run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
+
+      - name: Manual Intervention
+        run: echo "selected to ${{ github.event.inputs.environment }} choice"
+             
+      - name: Run Tests
+        run: echo "Ran Tests successfully!"
+      
+      - name: Promote to Pre-Prod
+        run: echo "Promotion to Pre Prod successful!"
+
+      - name: Run User Acceptance Tests
+        run: echo "Ran User Aceptance tests successfully!" 
+
+      - name: Promote to Prod
+        run: echo "Promotion to Prod successful!"

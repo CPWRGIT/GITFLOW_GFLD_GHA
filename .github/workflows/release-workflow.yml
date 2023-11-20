@@ -1,0 +1,25 @@
+name: Release workflow
+
+on:
+  workflow_call:
+    inputs:
+      config-path:
+        required: false
+        type: string
+    secrets:
+      token:
+        required: false
+
+jobs:
+  triage:
+    runs-on: [self-hosted]    
+    steps:
+    #- uses: actions/labeler@v4
+    #  with:
+    #    repo-token: ${{ secrets.token }}
+    #    configuration-path: ${{ inputs.config-path }}
+    #- name: Update CWXTSUBC
+      #  run: sed -i "s/MKS/MSK/g" GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
+
+       - name: Git Commit 
+         run: echo "Hello, world!"
