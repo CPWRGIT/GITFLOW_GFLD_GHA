@@ -87,7 +87,7 @@ jobs:
          $currentCommit  = $toCommit
          $previousCommit = $fromCommit
             
-         cmd.exe /c ${{ env.Win_Topaz_Location }}\IspwCLI.bat
+         cmd.exe /c '${{ env.Win_Topaz_Location }}\IspwCLI.bat'
           -operation syncGitToIspw
           -host 'cwcc.bmc.com
           -port  16196
