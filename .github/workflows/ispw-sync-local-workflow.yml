@@ -102,7 +102,7 @@ jobs:
           -ispwServerApp 'GITFLOWD'
           -ispwCheckoutLevel 'RLSE'
           -ispwContainerCreation 'per-branch'
-          -gitRepoUrl 'https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git'
+          -gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git"
           -gitFromHash $previousCommit
           -gitCommit $currentCommit 
     
