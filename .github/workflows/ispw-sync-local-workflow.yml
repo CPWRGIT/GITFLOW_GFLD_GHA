@@ -69,6 +69,9 @@ jobs:
    runs-on: [self-hosted]
    env:
     Win_Topaz_Location: 'C:\TWB-230101\WorkbenchCLI'
+    prevTag:
+    fromCommit:
+    toCommit:
    steps:
       - name: checkout step
         uses: actions/checkout@v3
@@ -79,6 +82,12 @@ jobs:
       #- name: Update CWXTSUBC
       #  run: sed -i "s/MKS/MSK/g" GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
 
+      - name: Get commit tags
+        run: |
+           prevTag = (git tag --sort=-refname).Split("`n")[1].Trim()
+ 
+           fromCommit = (git rev-list -1 $prevTag)
+           toCommit = (git rev-parse --verify HEAD)
       #- name: Git Commit 
       #  run: |  
       #      git add GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
@@ -106,6 +115,8 @@ jobs:
           showEnv: true
           assignmentPrefix: 'GFLD'
           ispwConfigPath: 'GenApp_MainframeCore\ispwconfig-nosb.yml'
+          gitFromHash: $fromCommit
+          gitCommit: $toCommit
       
       - name: Build
         uses: bmc-compuware/ispw-build@v1
