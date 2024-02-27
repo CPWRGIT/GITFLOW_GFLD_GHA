@@ -69,54 +69,47 @@ jobs:
    runs-on: [self-hosted]
    env:
     Win_Topaz_Location: 'C:\TWB-230101\WorkbenchCLI'
-    prevTag:
-    fromCommit:
-    toCommit:
    steps:
       - name: checkout step
         uses: actions/checkout@v3
-
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
-      #- name: Update CWXTSUBC
-      #  run: sed -i "s/MKS/MSK/g" GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
-
-      - name: Get commit tags
+          
+      - name: Git Commit 
         run: |
-           prevTag = (git tag --sort=-refname).Split("`n")[1].Trim()
- 
-           fromCommit = (git rev-list -1 $prevTag)
-           toCommit = (git rev-parse --verify HEAD)
-      #- name: Git Commit 
-      #  run: |  
+         $currentTag = (git tag --sort=-refname).Split("`n")[0].Trim()
+         $previousTag = (git tag --sort=-refname).Split("`n")[1].Trim()
+            
+         $fromCommit = (git rev-list -1 $previousTag)
+         $toCommit = (git rev-parse --verify HEAD)
+            
+         $currentCommit  = $toCommit
+         $previousCommit = $fromCommit
+            
+         cmd.exe /c ${{ env.Win_Topaz_Location }}\IspwCLI.bat `
+          -operation syncGitToIspw `
+          -host 'cwcc.bmc.com`
+          -port  16196
+          -id 'PFHMKS0' `
+          -pass 'gocwcc71' `
+          -protocol None `
+          -code 1047 `
+          -timeout 0 `
+          -ispwServerConfig 'iccga' `
+          -ispwConfigPath 'GenApp_MainframeCore\ispwconfig-nosb.yml' `
+          -ispwServerStream 'GITFLOW' `
+          -ispwServerApp 'GITFLOWD' `
+          -ispwCheckoutLevel 'RLSE' `
+          -ispwContainerCreation 'per-branch' `
+          -gitRepoUrl 'https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git' `
+          -gitFromHash $previousCommit `
+          -gitCommit $currentCommit 
+    
+
       #      git add GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
       #      git commit -m "Updated"
       #      git push
-      - name: sync step
-        uses: bmc-compuware/ispw-sync-local@ZENG-318739
-        id: sync
-        with:
-          host: 'cwcc.bmc.com'
-          port: 16196
-          uid: 'PFHMKS0'
-          #pass: ${{ secrets.TSO_TOKEN }}
-          pass: 'gocwcc70'
-          runtimeConfiguration: 'ICCGA'
-          stream: 'GITFLOW'
-          application: 'GITFLOWD'
-          subAppl: 'GITFLOWD'
-          checkoutLevel: 'RLSE'
-          gitUid: 'msingh9999'
-          #gitToken:  ${{ secrets.GH_TOKEN }}
-          gitToken: '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'
-          winTopazPath: ${{ env.Win_Topaz_Location }}
-          containerCreation: 'per-branch'
-          showEnv: true
-          assignmentPrefix: 'GFLD'
-          ispwConfigPath: 'GenApp_MainframeCore\ispwconfig-nosb.yml'
-          gitFromHash: $fromCommit
-          gitCommit: $toCommit
       
       - name: Build
         uses: bmc-compuware/ispw-build@v1
@@ -127,6 +120,7 @@ jobs:
           srid: 'ispw'
           runtime_configuration: 'ICCGA'
           build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
+          
       - name: Get the number of build failures
         run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
 
