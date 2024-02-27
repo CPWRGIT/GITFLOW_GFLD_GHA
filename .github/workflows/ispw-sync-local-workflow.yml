@@ -34,7 +34,7 @@ jobs:
           port: 16196
           uid: 'PFHMKS0'
           #pass: ${{ secrets.TSO_TOKEN }}
-          pass: 'gocwcc70'
+          pass: 'gocwcc71'
           runtimeConfiguration: 'ICCGA'
           stream: 'GITFLOW'
           application: 'GITFLOWD'
