@@ -77,6 +77,7 @@ jobs:
           ref: ${{ github.ref }}
           
       - name: Sync code 
+        shell: pwsh
         run: |
          $currentTag = (git tag --sort=-refname).Split("`n")[0].Trim()
          $previousTag = (git tag --sort=-refname).Split("`n")[1].Trim()
