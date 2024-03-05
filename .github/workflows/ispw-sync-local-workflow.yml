@@ -41,7 +41,7 @@ jobs:
           subAppl: ${{ secrets.CP_SUBAPPL }}
           checkoutLevel: 'FEAT'
           gitUid: ${{ secrets.GIT_USERID }}
-          gitToken:  ${{ secrets.GH_TOKEN }}
+          gitToken: ${{ secrets.GH_TOKEN }}
           winTopazPath: ${{ env.Win_Topaz_Location }}
           containerCreation: 'per-branch'
           containerDescription: $containerDesc ${GITHUB_REF##*/}
