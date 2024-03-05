@@ -45,6 +45,7 @@ jobs:
           gitToken: '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'
           winTopazPath: ${{ env.Win_Topaz_Location }}
           containerCreation: 'per-branch'
+          containerDescription: "PUSH TO FEATURE-GHA -  ${GITHUB_REF##*/}"
           showEnv: true
           assignmentPrefix: 'GFLD'
           ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
