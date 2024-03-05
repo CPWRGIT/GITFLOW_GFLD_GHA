@@ -90,7 +90,27 @@ jobs:
          $previousCommit = $fromCommit
             
 
-         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -gitBranch 'release\vGH.00.01' -host "cwcc.bmc.com" -port  16196 -id "PFHMKS0" -pass "gocwcc72" -protocol None -code 1047 -timeout 0 -ispwServerConfig "iccga" -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" -ispwServerStream "GITFLOW" -ispwServerApp "GITFLOWD" -ispwCheckoutLevel "RLSE" -ispwContainerCreation "per-branch" -assignmentPrefix "GFLD"-gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" -gitFromHash $previousCommit -gitCommit $currentCommit 
+         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" \
+         -operation syncGitToIspw \
+         -gitLocalPath '.\' \
+         -gitBranch ${{ github.head.ref }} \
+         -host ${{ vars.HCI_HOST }} \
+         -port  ${{ vars.HCI_PORT }} \
+         -id ${{ vars.TSO_USER }} \
+         -pass ${{ secrets.TSO_TOKEN }} \
+         -protocol None \
+         -code 1047 \
+         -timeout 0 \
+         -ispwServerConfig ${{ vars.CP_RUNTIME }} \
+         -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" \
+         -ispwServerStream ${{ vars.CP_STREAM }} \
+         -ispwServerApp ${{ vars.CP_APPL }} \
+         -ispwCheckoutLevel "RLSE" \
+         -ispwContainerCreation "per-branch" \
+         -assignmentPrefix ${{ vars.CP_ASSIGNPREFIX }} \
+         -gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" \
+         -gitFromHash $previousCommit \
+         -gitCommit $currentCommit 
     
       - name: Build
         uses: bmc-compuware/ispw-build@v1
