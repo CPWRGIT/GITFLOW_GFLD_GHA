@@ -20,7 +20,6 @@ jobs:
    runs-on: [self-hosted]
    env:
       Win_Topaz_Location: ${{ vars.CLI_LOCATION }}
-      containerDesc: 'PUSH TO FEATURE - GHE - '
    steps:
       - name: checkout step
         uses: actions/checkout@v3
@@ -68,7 +67,6 @@ jobs:
    runs-on: [self-hosted]
    env:
     Win_Topaz_Location: ${{ vars.CLI_LOCATION }}
-    containerDesc: 'PUSH TO RELEASE - GHE - '
    steps:
       - name: checkout step
         uses: actions/checkout@v3
@@ -88,29 +86,8 @@ jobs:
             
          $currentCommit  = $toCommit
          $previousCommit = $fromCommit
-            
-
-         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" \
-         -operation syncGitToIspw \
-         -gitLocalPath '.\' \
-         -gitBranch ${{ github.head.ref }} \
-         -host ${{ vars.HCI_HOST }} \
-         -port  ${{ vars.HCI_PORT }} \
-         -id ${{ vars.TSO_USER }} \
-         -pass ${{ secrets.TSO_TOKEN }} \
-         -protocol None \
-         -code 1047 \
-         -timeout 0 \
-         -ispwServerConfig ${{ vars.CP_RUNTIME }} \
-         -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" \
-         -ispwServerStream ${{ vars.CP_STREAM }} \
-         -ispwServerApp ${{ vars.CP_APPL }} \
-         -ispwCheckoutLevel "RLSE" \
-         -ispwContainerCreation "per-branch" \
-         -assignmentPrefix ${{ vars.CP_ASSIGNPREFIX }} \
-         -gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" \
-         -gitFromHash $previousCommit \
-         -gitCommit $currentCommit 
+         
+         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -gitBranch ${{ github.ref_name }} -host ${{ vars.HCI_HOST }} -port  ${{ vars.HCI_PORT }} -id ${{ vars.TSO_USER }} -pass ${{ secrets.TSO_TOKEN }} -protocol None -code 1047 -timeout 0 -ispwServerConfig ${{ vars.CP_RUNTIME }} -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" -ispwServerStream ${{ vars.CP_STREAM }} -ispwServerApp ${{ vars.CP_APPL }} -ispwCheckoutLevel "RLSE" -ispwContainerCreation "per-branch" -assignmentPrefix ${{ vars.CP_ASSIGNPREFIX }} -gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" -gitFromHash $previousCommit -gitCommit $currentCommit 
     
       - name: Build
         uses: bmc-compuware/ispw-build@v1
@@ -124,18 +101,7 @@ jobs:
           
       - name: Get the number of build failures
         run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
-
-      - name: Manual Intervention
-        run: echo "selected to ${{ github.event.inputs.environment }} choice"
              
       - name: Run Tests
         run: echo "Ran Tests successfully!"
       
-      - name: Promote to Pre-Prod
-        run: echo "Promotion to Pre Prod successful!"
-
-      - name: Run User Acceptance Tests
-        run: echo "Ran User Aceptance tests successfully!" 
-
-      - name: Promote to Prod
-        run: echo "Promotion to Prod successful!"
