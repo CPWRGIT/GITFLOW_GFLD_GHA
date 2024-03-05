@@ -42,7 +42,6 @@ jobs:
           checkoutLevel: 'FEAT'
           gitUid: ${{ secrets.GIT_USERID }}
           gitToken:  ${{ secrets.GH_TOKEN }}
-          //gitToken: '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'
           winTopazPath: ${{ env.Win_Topaz_Location }}
           containerCreation: 'per-branch'
           containerDescription: $containerDesc ${GITHUB_REF##*/}
