@@ -19,7 +19,8 @@ jobs:
    if: (startsWith(github.ref, 'refs/heads/feature/'))
    runs-on: [self-hosted]
    env:
-      Win_Topaz_Location: 'C:\TWB-230101\WorkbenchCLI'
+      Win_Topaz_Location: ${{ vars.CLI_LOCATION }}
+      containerDesc: 'PUSH TO FEATURE - GHE - '
    steps:
       - name: checkout step
         uses: actions/checkout@v3
@@ -30,33 +31,31 @@ jobs:
         uses: bmc-compuware/ispw-sync-local@ZENG-318739
         id: sync
         with:
-          host: 'cwcc.bmc.com'
-          port: 16196
-          uid: 'PFHMKS0'
-          #pass: ${{ secrets.TSO_TOKEN }}
-          pass: 'gocwcc72'
-          runtimeConfiguration: 'ICCGA'
-          stream: 'GITFLOW'
-          application: 'GITFLOWD'
-          subAppl: 'GITFLOWD'
+          host: ${{ vars.HCI_HOST }}
+          port: ${{ vars.HCI_PORT }}
+          uid: ${{ vars.TSO_USER }}
+          pass: ${{ secrets.TSO_TOKEN }}
+          runtimeConfiguration: ${{ vars.CP_RUNTIME }}
+          stream: ${{ vars.CP_STREAM }}
+          application: ${{ vars.CP_APPL }}
+          subAppl: ${{ vars.CP_SUBAPPL }}
           checkoutLevel: 'FEAT'
-          gitUid: 'msingh9999'
-          #gitToken:  ${{ secrets.GH_TOKEN }}
-          gitToken: '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'
+          gitUid: ${{ vars.GIT_USERID }}
+          gitToken: ${{ secrets.GIT_TOKEN }}
           winTopazPath: ${{ env.Win_Topaz_Location }}
           containerCreation: 'per-branch'
           showEnv: true
-          assignmentPrefix: 'GFLD'
+          assignmentPrefix: ${{ vars.CP_ASSIGNPREFIX }}
           ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
       
       - name: Build
         uses: bmc-compuware/ispw-build@v1
         id: build
         with:
-          ces_url: 'http://aus-bdc-cwcc.bmc.com:2020/'
+          ces_url: ${{ vars.CES_URL }}
           ces_token: ${{ secrets.CES_TOKEN }}
           srid: 'ispw'
-          runtime_configuration: 'ICCGA'
+          runtime_configuration: ${{ vars.CP_RUNTIME }}
           build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
       - name: Get the number of build failures
         run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
@@ -68,7 +67,8 @@ jobs:
    if: (startsWith(github.ref, 'refs/heads/release/'))
    runs-on: [self-hosted]
    env:
-    Win_Topaz_Location: 'C:\TWB-230101\WorkbenchCLI'
+    Win_Topaz_Location: ${{ vars.CLI_LOCATION }}
+    containerDesc: 'PUSH TO RELEASE - GHE - '
    steps:
       - name: checkout step
         uses: actions/checkout@v3
@@ -78,6 +78,7 @@ jobs:
           
       - name: Sync code 
         shell: pwsh
+        id: sync
         run: |
          $currentTag = (git tag --sort=-refname).Split("`n")[0].Trim()
          $previousTag = (git tag --sort=-refname).Split("`n")[1].Trim()
@@ -89,16 +90,36 @@ jobs:
          $previousCommit = $fromCommit
             
 
-         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -gitBranch 'release\vGH.00.01' -host "cwcc.bmc.com" -port  16196 -id "PFHMKS0" -pass "gocwcc72" -protocol None -code 1047 -timeout 0 -ispwServerConfig "iccga" -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" -ispwServerStream "GITFLOW" -ispwServerApp "GITFLOWD" -ispwCheckoutLevel "RLSE" -ispwContainerCreation "per-branch" -assignmentPrefix "GFLD"-gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" -gitFromHash $previousCommit -gitCommit $currentCommit 
+         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" \
+         -operation syncGitToIspw \
+         -gitLocalPath '.\' \
+         -gitBranch ${{ github.head.ref }} \
+         -host ${{ vars.HCI_HOST }} \
+         -port  ${{ vars.HCI_PORT }} \
+         -id ${{ vars.TSO_USER }} \
+         -pass ${{ secrets.TSO_TOKEN }} \
+         -protocol None \
+         -code 1047 \
+         -timeout 0 \
+         -ispwServerConfig ${{ vars.CP_RUNTIME }} \
+         -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" \
+         -ispwServerStream ${{ vars.CP_STREAM }} \
+         -ispwServerApp ${{ vars.CP_APPL }} \
+         -ispwCheckoutLevel "RLSE" \
+         -ispwContainerCreation "per-branch" \
+         -assignmentPrefix ${{ vars.CP_ASSIGNPREFIX }} \
+         -gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" \
+         -gitFromHash $previousCommit \
+         -gitCommit $currentCommit 
     
       - name: Build
         uses: bmc-compuware/ispw-build@v1
         id: build
         with:
-          ces_url: 'http://aus-bdc-cwcc.bmc.com:2020/'
+          ces_url: ${{ vars.CES_URL }}
           ces_token: ${{ secrets.CES_TOKEN }}
           srid: 'ispw'
-          runtime_configuration: 'ICCGA'
+          runtime_configuration: ${{ vars.CP_RUNTIME }}
           build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
           
       - name: Get the number of build failures
