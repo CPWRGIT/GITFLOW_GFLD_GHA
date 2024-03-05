@@ -19,7 +19,7 @@ jobs:
    if: (startsWith(github.ref, 'refs/heads/feature/'))
    runs-on: [self-hosted]
    env:
-      Win_Topaz_Location: ${{ secrets.CLI_LOCATION }}
+      Win_Topaz_Location: ${{ vars.CLI_LOCATION }}
       containerDesc: 'PUSH TO FEATURE - GHE - '
    steps:
       - name: checkout step
@@ -31,32 +31,31 @@ jobs:
         uses: bmc-compuware/ispw-sync-local@ZENG-318739
         id: sync
         with:
-          host: ${{ secrets.HCI_HOST }}
-          port: ${{ secrets.HCI_PORT }}
-          uid: ${{ secrets.TSO_USER }}
+          host: ${{ vars.HCI_HOST }}
+          port: ${{ vars.HCI_PORT }}
+          uid: ${{ vars.TSO_USER }}
           pass: ${{ secrets.TSO_TOKEN }}
-          runtimeConfiguration: ${{ secrets.CP_RUNTIME }}
-          stream: ${{ secrets.CP_STREAM }}
-          application: ${{ secrets.CP_APPL }}
-          subAppl: ${{ secrets.CP_SUBAPPL }}
+          runtimeConfiguration: ${{ vars.CP_RUNTIME }}
+          stream: ${{ vars.CP_STREAM }}
+          application: ${{ vars.CP_APPL }}
+          subAppl: ${{ vars.CP_SUBAPPL }}
           checkoutLevel: 'FEAT'
-          gitUid: ${{ secrets.GIT_USERID }}
+          gitUid: ${{ vars.GIT_USERID }}
           gitToken: ${{ secrets.GIT_TOKEN }}
           winTopazPath: ${{ env.Win_Topaz_Location }}
           containerCreation: 'per-branch'
-          containerDescription: $containerDesc ${GITHUB_REF##*/}
           showEnv: true
-          assignmentPrefix: ${{ secrets.CP_ASSIGNPREFIX }}
+          assignmentPrefix: ${{ vars.CP_ASSIGNPREFIX }}
           ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
       
       - name: Build
         uses: bmc-compuware/ispw-build@v1
         id: build
         with:
-          ces_url: 'http://aus-bdc-cwcc.bmc.com:2020/'
+          ces_url: ${{ vars.CES_URL }}
           ces_token: ${{ secrets.CES_TOKEN }}
           srid: 'ispw'
-          runtime_configuration: ${{ secrets.CP_RUNTIME }}
+          runtime_configuration: ${{ vars.CP_RUNTIME }}
           build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
       - name: Get the number of build failures
         run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
@@ -68,8 +67,8 @@ jobs:
    if: (startsWith(github.ref, 'refs/heads/release/'))
    runs-on: [self-hosted]
    env:
-    Win_Topaz_Location: ${{ secrets.CLI_LOCATION }}
-    ontainerDesc: 'PUSH TO RELEASE - GHE - '
+    Win_Topaz_Location: ${{ vars.CLI_LOCATION }}
+    containerDesc: 'PUSH TO RELEASE - GHE - '
    steps:
       - name: checkout step
         uses: actions/checkout@v3
@@ -97,10 +96,10 @@ jobs:
         uses: bmc-compuware/ispw-build@v1
         id: build
         with:
-          ces_url: ${{ secrets.CES_URL }}
+          ces_url: ${{ vars.CES_URL }}
           ces_token: ${{ secrets.CES_TOKEN }}
           srid: 'ispw'
-          runtime_configuration: ${{ secrets.CP_RUNTIME }}
+          runtime_configuration: ${{ vars.CP_RUNTIME }}
           build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
           
       - name: Get the number of build failures
