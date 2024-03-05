@@ -34,7 +34,7 @@ jobs:
           port: 16196
           uid: 'PFHMKS0'
           #pass: ${{ secrets.TSO_TOKEN }}
-          pass: 'gocwcc71'
+          pass: 'gocwcc72'
           runtimeConfiguration: 'ICCGA'
           stream: 'GITFLOW'
           application: 'GITFLOWD'
@@ -88,7 +88,7 @@ jobs:
          $currentCommit  = $toCommit
          $previousCommit = $fromCommit
             
-         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -gitBranch 'release\vGH.00.01' -host "cwcc.bmc.com" -port  16196 -id "PFHMKS0" -pass "gocwcc71" -protocol None -code 1047 -timeout 0 -ispwServerConfig "iccga" -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" -ispwServerStream "GITFLOW" -ispwServerApp "GITFLOWD" -ispwCheckoutLevel "RLSE" -ispwContainerCreation "per-branch" -assignmentPrefix "GFLD"-gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" -gitFromHash $previousCommit -gitCommit $currentCommit 
+         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -gitBranch 'release\vGH.00.01' -host "cwcc.bmc.com" -port  16196 -id "PFHMKS0" -pass "gocwcc72" -protocol None -code 1047 -timeout 0 -ispwServerConfig "iccga" -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" -ispwServerStream "GITFLOW" -ispwServerApp "GITFLOWD" -ispwCheckoutLevel "RLSE" -ispwContainerCreation "per-branch" -assignmentPrefix "GFLD"-gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" -gitFromHash $previousCommit -gitCommit $currentCommit 
     
       #      git add GenApp_MainframeCore\Sources\Subs\CWXTSUBC.cbl
       #      git commit -m "Updated"
