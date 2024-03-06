@@ -46,7 +46,52 @@ jobs:
           showEnv: true
           assignmentPrefix: ${{ vars.CP_ASSIGNPREFIX }}
           ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
-      
+
+      - name: Check Build Parms
+        shell: pwsh
+        id: checkbuild
+        run: |
+            if(-not (Test-Path -Path .\automaticBuildParams.txt -PathType Leaf)) {
+   
+             Write-Host "No Mainframe Build parameters were found. Likely, no MF components were modified. The build will continue and just execute a code scan."
+             Write-Host "##vso[task.complete result=Failed;]DONE"
+            }
+            else {
+   
+             Write-Host "Mainframe Build parameters were found. Will continue with full Mainframe Build process."
+           
+             [string]$fileContent  = ''          
+             $fileContent          = Get-Content .\automaticBuildParams.txt
+             $content              = ''
+   
+             foreach ($line in $fileContent) { $content = $content + "`n" + $line }
+             
+             $json                 = ConvertFrom-JSON $content
+   
+             $taskParm             = ""
+   
+             foreach($taskId in $json.taskIds) {
+                 $taskParm = $taskParm + $taskId + ","
+             }
+   
+             $taskParm = $taskParm.Substring(0,$taskParm.Length - 1)
+   
+             $taskLevel    = $json.taskLevel
+             $assignmentId = $json.containerId
+   
+             Write-Host "Identified" 
+             Write-Host "  Tasks"
+             Write-Host $taskParm
+             Write-Host "  Assignment"
+             Write-Host $assignmentId
+             Write-Host "  Level"
+             Write-Host $taskLevel
+   
+             Write-Host "##vso[task.setvariable variable=taskIds;isoutput=true]$taskParm"
+             Write-Host "##vso[task.setvariable variable=taskLevel;isoutput=true]$taskLevel"
+             Write-Host "##vso[task.setvariable variable=assignmentId;isoutput=true]$assignmentId"
+            }
+   
       - name: Build
         uses: bmc-compuware/ispw-build@v1
         id: build
@@ -87,8 +132,58 @@ jobs:
          $currentCommit  = $toCommit
          $previousCommit = $fromCommit
          
-         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -gitBranch ${{ github.ref_name }} -host ${{ vars.HCI_HOST }} -port  ${{ vars.HCI_PORT }} -id ${{ vars.TSO_USER }} -pass ${{ secrets.TSO_TOKEN }} -protocol None -code 1047 -timeout 0 -ispwServerConfig ${{ vars.CP_RUNTIME }} -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" -ispwServerStream ${{ vars.CP_STREAM }} -ispwServerApp ${{ vars.CP_APPL }} -ispwCheckoutLevel "RLSE" -ispwContainerCreation "per-branch" -assignmentPrefix ${{ vars.CP_ASSIGNPREFIX }} -gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" -gitFromHash $previousCommit -gitCommit $currentCommit 
+         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -data ${{ github.workspace }}\ispwcliwk  -gitBranch ${{ github.ref_name }} -host ${{ vars.HCI_HOST }} -port  ${{ vars.HCI_PORT }} -id ${{ vars.TSO_USER }} -pass ${{ secrets.TSO_TOKEN }} -protocol None -code 1047 -timeout 0 -ispwServerConfig ${{ vars.CP_RUNTIME }} -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" -ispwServerStream ${{ vars.CP_STREAM }} -ispwServerApp ${{ vars.CP_APPL }} -ispwCheckoutLevel "RLSE" -ispwContainerCreation "per-branch" -assignmentPrefix ${{ vars.CP_ASSIGNPREFIX }} -gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" -gitFromHash $previousCommit -gitCommit $currentCommit 
     
+      - name: Check Build Parms
+        shell: pwsh
+        id: checkbuild
+        run: |
+          if(-not (Test-Path -Path .\automaticBuildParams.txt -PathType Leaf)) {
+ 
+           Write-Host "No Mainframe Build parameters were found. Likely, no MF components were modified. The build will continue and just execute a code scan."
+           Write-Host "##vso[task.complete result=Failed;]DONE"
+          }
+          else {
+ 
+           Write-Host "Mainframe Build parameters were found. Will continue with full Mainframe Build process."
+         
+           [string]$fileContent  = ''          
+           $fileContent          = Get-Content .\automaticBuildParams.txt
+           $content              = ''
+ 
+           foreach ($line in $fileContent) { $content = $content + "`n" + $line }
+           
+           $json                 = ConvertFrom-JSON $content
+ 
+           $taskParm             = ""
+ 
+           foreach($taskId in $json.taskIds) {
+               $taskParm = $taskParm + $taskId + ","
+           }
+ 
+           $taskParm = $taskParm.Substring(0,$taskParm.Length - 1)
+ 
+           $taskLevel    = $json.taskLevel
+           $assignmentId = $json.containerId
+
+           Write-Host "Build JSON: " 
+           Write-Host $fileContent
+           Write-Host "Identified" 
+           Write-Host "  Tasks"
+           Write-Host $taskParm
+           Write-Host "  Assignment"
+           Write-Host $assignmentId
+           Write-Host "  Level"
+           Write-Host $taskLevel
+ 
+           Write-Host "##vso[task.setvariable variable=taskIds;isoutput=true]$taskParm"
+           Write-Host "##vso[task.setvariable variable=taskLevel;isoutput=true]$taskLevel"
+           Write-Host "##vso[task.setvariable variable=assignmentId;isoutput=true]$assignmentId"
+           echo "::set-output name=BuildJSON::$fileContent"
+
+           Write-Host $BuildJSON
+          }
+ 
       - name: Build
         uses: bmc-compuware/ispw-build@v1
         id: build
@@ -97,7 +192,7 @@ jobs:
           ces_token: ${{ secrets.CES_TOKEN }}
           srid: 'ispw'
           runtime_configuration: ${{ vars.CP_RUNTIME }}
-          build_automatically: ${{ steps.sync.outputs.automaticBuildJson }}
+          build_automatically: ${{ steps.checkbuild.outputs.BuildJSON }}
           
       - name: Get the number of build failures
         run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
