@@ -115,7 +115,7 @@ jobs:
             echo CES User ID      : $(hostUser)
             echo Test Folder      : ./GenApp_MainframeCore/Tests/Unit
             
-            $(cliPath)\TotalTestFTCLI.bat ^
+            ${{ vars.CLI_LOCATION }}\TotalTestFTCLI.bat ^
                 -e 5c519facfba8720a90ccc645 ^
                 -u ${{ vars.TSO_USER }} ^
                 -p ${{ secrets.TSO_TOKEN }} ^
