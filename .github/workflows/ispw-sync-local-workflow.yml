@@ -115,7 +115,7 @@ jobs:
             echo CES User ID      : ${{ vars.TSO_USER }}
             echo Test Folder      : ./GenApp_MainframeCore/Tests/Unit
             
-            ${{ vars.CLI_LOCATION }}\TotalTestFTCLI.bat -e 5c519facfba8720a90ccc645 -u CWEZXXX -p 24jantd -s http://cwc2.bmc.com:2020/totaltestapi/ -cesu CWEZXXX -cesp d6171bfc-c15e-4d83-bc67-3518dee17ec6 -code 1047 -f ./GenApp_MainframeCore/Tests/Unit -pnf changedPrograms.json -ccrepo 'PFHMKS0.XPCOVER.REPOST' -ctxvars '"load_lib=SALESSUP.#0000307.FEAT.LOAD"' -R -G -v 6 -l jenkins -loglevel INFO -data ${{ github.workspace }}\ispwcliwk
+            ${{ vars.CLI_LOCATION }}\TotalTestFTCLI.bat -e 5c519facfba8720a90ccc645 -u CWEZXXX -p 24jantd -s http://cwc2.bmc.com:2020/totaltestapi/ -cesu CWEZXXX -cesp d6171bfc-c15e-4d83-bc67-3518dee17ec6 -f ./GenApp_MainframeCore/Tests/Unit -pnf changedPrograms.json -ccrepo 'PFHMKS0.XPCOVER.REPOST' -ctxvars '"load_lib=SALESSUP.#0000307.FEAT.LOAD"' -R -G -v 6 -l jenkins -loglevel INFO -data ${{ github.workspace }}\ispwcliwk
 
 
   release-branch-build:
