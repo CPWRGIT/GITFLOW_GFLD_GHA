@@ -110,9 +110,9 @@ jobs:
         run: |
             echo Executing Unit Tests using Parameters
             echo Environment      : 5c519facfba8720a90ccc645
-            echo User ID          : $(hostUser)
+            echo User ID          : ${{ vars.TSO_USER }}
             echo CES URI          : http://cwc2.bmc.com:2020
-            echo CES User ID      : $(hostUser)
+            echo CES User ID      : ${{ vars.TSO_USER }}
             echo Test Folder      : ./GenApp_MainframeCore/Tests/Unit
             
             ${{ vars.CLI_LOCATION }}\TotalTestFTCLI.bat ^
