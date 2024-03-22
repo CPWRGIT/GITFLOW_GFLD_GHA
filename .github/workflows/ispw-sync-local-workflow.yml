@@ -105,7 +105,35 @@ jobs:
         run: echo "The number of build failures is ${{ steps.build.outputs.generate_failed_count }}"
 
       - name: Run Unit Tests
-        run: echo "Ran Unit Tests successfully"  
+        shell: pwsh
+        id: runTests
+        run: |
+            echo Executing Unit Tests using Parameters
+            echo Environment      : 5c519facfba8720a90ccc645
+            echo User ID          : $(hostUser)
+            echo CES URI          : http://cwc2.bmc.com:2020
+            echo CES User ID      : $(hostUser)
+            echo Test Folder      : ./GenApp_MainframeCore/Tests/Unit
+            
+            $(cliPath)\TotalTestFTCLI.bat ^
+                -e 5c519facfba8720a90ccc645 ^
+                -u ${{ vars.TSO_USER }} ^
+                -p ${{ secrets.TSO_TOKEN }} ^
+                -s http://cwc2.bmc.com:2020/totaltestapi/ ^
+                -cesu ${{ vars.HCI_HOST }} ^
+                -cesp${{ secrets.TSO_TOKEN }} ^
+                -code 1047 ^
+                -f ./GenApp_MainframeCore/Tests/Unit ^
+                -pnf changedPrograms.json ^
+                -ccrepo 'PFHMKS0.XPCOVER.REPOST' ^
+                -ctxvars '"load_lib=SALESSUP.#0000307.FEAT.LOAD"' ^
+                -R ^
+                -G ^
+                -v 6 ^
+                -l jenkins ^
+                -loglevel INFO ^
+                -data ${{ github.workspace }}\ispwcliwk
+
 
   release-branch-build:
    if: (startsWith(github.ref, 'refs/heads/release/'))
