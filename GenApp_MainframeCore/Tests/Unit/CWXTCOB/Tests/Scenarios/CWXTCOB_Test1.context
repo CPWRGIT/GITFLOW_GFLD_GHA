@@ -6,6 +6,8 @@
     </Parameter>
     <Parameter key="unittest.loadlibraries">
       <Value>CEE.SCEERUN</Value>
+      <Value>SALESSUP.GITFLOWD.FEAT.LOAD</Value>
+      <Value>SALESSUP.GITFLOWD.PROD.LOAD</Value>
       <Value>${load_lib}</Value>
     </Parameter>
   </ExtensionData>
