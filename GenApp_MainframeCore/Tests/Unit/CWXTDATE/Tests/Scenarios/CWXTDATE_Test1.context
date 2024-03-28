@@ -3,11 +3,11 @@
   <ExtensionData>
     <Parameter key="load_lib">
       <Value>SALESSUP.GITFLOWD.UNIT.LOAD</Value>
-      <Value>SALESSUP.GITFLOWD.FEAT.LOAD</Value>
-      <Value>SALESSUP.GITFLOWD.PROD.LOAD</Value>
     </Parameter>
     <Parameter key="unittest.loadlibraries">
       <Value>CEE.SCEERUN</Value>
+      <Value>SALESSUP.GITFLOWD.FEAT.LOAD</Value>
+      <Value>SALESSUP.GITFLOWD.PROD.LOAD</Value>
       <Value>${load_lib}</Value>
     </Parameter>
   </ExtensionData>
