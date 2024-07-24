@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}      
       - name: sync step
-        uses: bmc-compuware/ispw-sync-local@ZENG-331068
+        uses: bmc-compuware/ispw-sync-local@ZENG-318739
         id: sync
         with:
           host: ${{ vars.HCI_HOST }}
@@ -46,8 +46,6 @@ jobs:
           showEnv: true
           assignmentPrefix: ${{ vars.CP_ASSIGNPREFIX }}
           ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
-          gitCommit: 'blah'
-          gitFromHash: '-1'
 
       - name: Check Build Parms
         shell: pwsh
