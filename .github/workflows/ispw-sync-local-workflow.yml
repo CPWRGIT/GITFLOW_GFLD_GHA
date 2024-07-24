@@ -46,6 +46,8 @@ jobs:
           showEnv: true
           assignmentPrefix: ${{ vars.CP_ASSIGNPREFIX }}
           ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
+          gitCommit: 'blah'
+          gitFromHash: '-1'
 
       - name: Check Build Parms
         shell: pwsh
