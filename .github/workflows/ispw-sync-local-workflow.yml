@@ -51,47 +51,54 @@ jobs:
         shell: pwsh
         id: checkbuild
         run: |
-            if(-not (Test-Path -Path .\automaticBuildParams.txt -PathType Leaf)) {
-   
-             Write-Host "No Mainframe Build parameters were found. Likely, no MF components were modified. The build will continue and just execute a code scan."
-             Write-Host "##vso[task.complete result=Failed;]DONE"
+          if (-not (Test-Path -Path "./automaticBuildParams.txt" -PathType Leaf)) {
+
+            Write-Host "No Mainframe Build parameters were found."
+            Write-Host "Likely, no MF components were modified."
+
+            exit 1
+          }
+          else {
+
+            Write-Host "Mainframe Build parameters were found."
+
+            [string]$fileContent = ''
+            $fileContent = Get-Content "./automaticBuildParams.txt"
+
+            $content = ''
+
+            foreach ($line in $fileContent) {
+              $content = $content + "`n" + $line
             }
-            else {
-   
-             Write-Host "Mainframe Build parameters were found. Will continue with full Mainframe Build process."
-           
-             [string]$fileContent  = ''          
-             $fileContent          = Get-Content .\automaticBuildParams.txt
-             $content              = ''
-   
-             foreach ($line in $fileContent) { $content = $content + "`n" + $line }
-             
-             $json                 = ConvertFrom-JSON $content
-   
-             $taskParm             = ""
-   
-             foreach($taskId in $json.taskIds) {
-                 $taskParm = $taskParm + $taskId + ","
-             }
-   
-             $taskParm = $taskParm.Substring(0,$taskParm.Length - 1)
-   
-             $taskLevel    = $json.taskLevel
-             $assignmentId = $json.containerId
-   
-             Write-Host "Identified" 
-             Write-Host "  Tasks"
-             Write-Host $taskParm
-             Write-Host "  Assignment"
-             Write-Host $assignmentId
-             Write-Host "  Level"
-             Write-Host $taskLevel
-   
-             Write-Host "##vso[task.setvariable variable=taskIds;isoutput=true]$taskParm"
-             Write-Host "##vso[task.setvariable variable=taskLevel;isoutput=true]$taskLevel"
-             Write-Host "##vso[task.setvariable variable=assignmentId;isoutput=true]$assignmentId"
+
+            $json = ConvertFrom-Json $content
+
+            $taskParm = ""
+
+            foreach ($taskId in $json.taskIds) {
+              $taskParm = $taskParm + $taskId + ","
             }
-   
+
+            $taskParm = $taskParm.Substring(0, $taskParm.Length - 1)
+
+            $taskLevel = $json.taskLevel
+            $assignmentId = $json.containerId
+
+            Write-Host "Identified"
+            Write-Host "Tasks"
+            Write-Host $taskParm
+
+            Write-Host "Assignment"
+            Write-Host $assignmentId
+
+            Write-Host "Level"
+            Write-Host $taskLevel
+
+            "taskIds=$taskParm" >> $env:GITHUB_OUTPUT
+            "taskLevel=$taskLevel" >> $env:GITHUB_OUTPUT
+            "assignmentId=$assignmentId" >> $env:GITHUB_OUTPUT
+          }
+          
       - name: Build
         uses: bmc-compuware/ispw-build@v1
         id: build
